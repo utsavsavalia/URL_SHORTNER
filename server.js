@@ -60,13 +60,6 @@
 
 
 
-
-
-
-
-
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -74,7 +67,7 @@ const cors = require('cors');
 const shortid = require('shortid');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -93,28 +86,32 @@ const ShortURL = mongoose.model('ShortURL', {
 });
 
 app.post('/api/shorten', async (req, res) => {
-  console.log("sdfasdf");
   const { originalURL } = req.body;
-  const shortID = "shortid.generate();";
-
+  // const shortID = customHash(originalURL);
+  const shortID = "test_string_123";
   try {
     const newURL = new ShortURL({ originalURL, shortID });
     await newURL.save();
+    // const objo = {
+
+    //   shortID: shortid
+      
+    // }
+
     res.json(newURL);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.get('/:shortID', async (req, res) => {
-  const { shortID } = req.params;
+app.post('/:${shortID}', async (req, res) => {
 
   try {
     const urlData = await ShortURL.findOne({ shortID });
     if (!urlData) {
       return res.status(404).json({ error: 'URL not found' });
     }
-
+    const url = `localhost:3001/`
     res.redirect(urlData.originalURL);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
