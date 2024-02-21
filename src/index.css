@@ -1,8 +1,47 @@
-.tester {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+
+.flexer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  gap: 10px;
+  gap: 2rem;
+  width: 80rem;
+  height: 30rem;
+  margin: auto;
+}
+
+
+
+.midbar {
+  height: 50%;
+}
+
+.top {
+  width: 100vw;
+  height: 6rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  color: white;
+  background-color: black;
+}
+
+.floater {
+  float: right;
+}
+
+.contact {
+  position: absolute;
+  right: 5%;
+  cursor: pointer;
 }

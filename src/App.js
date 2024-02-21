@@ -1,161 +1,87 @@
-// import logo from './logo.svg';
-// import './App.css';
+import React, { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-// import React, { useState } from 'react';
-// import axios from 'axios';
-
-// function App() {
-//   const [originalURL, setOriginalURL] = useState('');
-//   const [shortenedURL, setShortenedURL] = useState('');
-
-//   const shortenURL = async () => {
-//     try {
-//       const response = await axios.post('http://localhost:3000/api/test', {
-//         originalURL,
-//       });
-//       setShortenedURL(`http://localhost:3000/${response.data.shortID}`);
-//     } catch (error) {
-//       console.error('Error shortening URL:', error);
-//     }
-//   };
-
-//   return (
-//     <div className='tester'>
-//       <h1>URL Shortener</h1>
-//       <input
-//         type="text"
-//         placeholder="Enter URL to shorten"
-//         value={originalURL}
-//         onChange={(e) => setOriginalURL(e.target.value)}
-//       />
-//       <button onClick={shortenURL}>Shorten</button>
-//       {shortenedURL && (
-//         <div>
-//           <p>Shortened URL:</p>
-//           <a href={shortenedURL} target="_blank" rel="noopener noreferrer">
-//             {shortenedURL}
-//           </a>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-import { customHash } from './functions'
-import React, { useState } from 'react';
-import axios from 'axios';
-
-export const shorURL = "";
 
 function App() {
   const [originalURL, setOriginalURL] = useState('');
   const [shortenedURL, setShortenedURL] = useState('');
+  const [retrievalURL, setRetrievalURL] = useState('');
 
   
   const shortenURL = async () => {
-    const shortID = ""
-    const bod = customHash(originalURL)
     try {
       const response = await fetch('http://localhost:3001/api/shorten', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bod }),
+        body: JSON.stringify({originalURL}),
       });
   
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
   
-      shortID = await response.json();
-      console.log('Shortened URL data:', shortID);
+      const shortID = await response.json();
   
       // Use your shortened URL as needed
-      // setShortenedURL(`http://localhost:3001/${data.shortID}`);
+      setShortenedURL(shortID.shortID);
   
     } catch (error) {
       console.error('Error shortening URL:', error.message);
     }
-
+  };
+  
+  const handleRetrieve = async () => {
     try{
-      // const shortID = 'test_string_123';
-      const response2 = await fetch(`http://localhost:3001/${shortID}`, {
+      const response2 = await fetch(`http://localhost:3001/${shortenedURL}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({ bod }),
       });
 
       if (!response2.ok) {
         throw new Error(`HTTP error! status: ${response2.status}`);
       }
 
-      // // Handle the redirect manually, as fetch does not automatically follow redirects
-      // if (response2.redirected) {
-      //   window.location.href = response2.url;
-      // } else {
-      //   const data2 = await response2.json();
-      //   console.log('long URL data:', data2);
-      //   // Use your long URL data as needed
-      //   // For example, you can access the long URL with data2.originalURL
-      // }
-
-      // const data2 = await response2.json();
-      // console.log('long URL data:', data2);
-  
-      // // Use your shortened URL as needed
-      // // setShortenedURL(`http://localhost:3001/${data.shortID}`);
-
+      const resLog = await response2.json()
+      setRetrievalURL(resLog)
   
     } catch (error) {
       console.error('Error shortening URL:', error.message);
     }
-  
-  };
-  
-  const lookupUrl = async () => {
-    
+
+  }
+
+  function openLinkedIn() {
+    window.open("https://www.linkedin.com/in/daniel-detchev-454b56196/")
+    window.open("https://www.linkedin.com/in/utsav-savalia/")
   }
 
   return (
-    <div>
-      <h1>URL Shortener</h1>
-      <input
+    <div className='flexwhole'>
+      <div className='top'>
+      <h1 className='text-white text-3xl pl-3 floater'>URL Shortener</h1>
+      <p onClick={openLinkedIn} className='contact'>Contact</p>
+      </div>
+
+
+      <div className='flexer'>
+        <div className='border-indigo-800'>
+      <input className='pl-2 border-solid border-2 border-indigo-900'
         type="text"
         placeholder="Enter URL to shorten"
         value={originalURL}
         onChange={(e) => setOriginalURL(e.target.value)}
       />
-      <button onClick={shortenURL}>Shorten</button>
+      <button className = "ml-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={shortenURL}>Shorten</button>
+      </div>
+      
       {shortenedURL && (
         <div>
           <p>Shortened URL:</p>
@@ -164,6 +90,27 @@ function App() {
           </a>
         </div>
       )}
+
+        <p className='border-r-4 text-white border-stone-900 midbar roun'>_</p>
+
+      {/* <h1>URL Retriever</h1> */}
+      <input className='pl-2 border-solid border-2 border-indigo-900'
+        type="text"
+        placeholder="Enter shortened URL"
+      />
+      <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleRetrieve}>Retrieve</button>
+
+      
+      {setRetrievalURL && (
+        <div>
+          <p>Orig URL:</p>
+          <p href={retrievalURL} target="_blank" rel="noopener noreferrer">
+            {retrievalURL}
+          </p>
+        </div>
+      )}
+
+      </div>
     </div>
   );
 }
